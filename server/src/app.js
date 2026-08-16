@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const restaurantRoutes = require("./routes/restaurant.routes");
+
 const app = express();
 
 // security middleware
@@ -27,5 +29,7 @@ app.get("/api/health", (req, res) => {
     message: "DineOps server is running!!",
   });
 });
+
+app.use("/api/restaurants", restaurantRoutes);
 
 module.exports = app;
