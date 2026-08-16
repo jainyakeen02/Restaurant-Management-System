@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+        .header { background-color: #f8f9fa; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { padding: 20px; }
+        .footer { text-align: center; margin-top: 20px; font-size: 0.8em; color: #777; }
+        .total { font-size: 1.2em; font-weight: bold; color: #d9534f; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>{{RESTAURANT_NAME}}</h2>
+        </div>
+        <div class="content">
+            <p>Hi {{CUSTOMER_NAME}},</p>
+            <p>Thank you for your order! We have successfully received it and our kitchen is getting ready to prepare your meal.</p>
+            
+            <h3>Order Summary</h3>
+            <p><strong>Order Number:</strong> {{ORDER_NUMBER}}</p>
+            <p><strong>Total Amount:</strong> <span class="total">{{TOTAL_AMOUNT}}</span></p>
+            
+            <p>If you have any questions, please contact the restaurant directly.</p>
+        </div>
+        <div class="footer">
+            <p>Powered by DineOps</p>
+        </div>
+    </div>
+</body>
+</html>

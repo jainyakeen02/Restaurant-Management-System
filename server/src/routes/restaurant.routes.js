@@ -1,23 +1,21 @@
 const express = require("express");
-const Restaurant = require("../models/restaurant");
+const {
+  getRestaurants,
+  getRestaurantById,
+  createRestaurant,
+  updateRestaurant,
+  deactivateRestaurant,
+} = require("../controllers/restaurant.controller");
+const { protect, authorize } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-router.post("/", async (req, res) =>{
-    try{
-        const restaurant = await Restaurant.create(req.body);
-        res.status(201).json({
-            success :true,
-            message:"Restaurant Created Successfully",
-            data: restaurant,
-        });
-    }catch (error){
-        console.error("Restaurant creation failed:", error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to create restaurant",
-        });
-    }
-});
+router.use(protect);
+
+router.get("/", getRestaurants);
+router.post("/", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createRestaurant);
+router.get("/:id", getRestaurantById);
+router.put("/:id", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER", "RESTAURANT_ADMIN"), updateRestaurant);
+router.patch("/:id/deactivate", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), deactivateRestaurant);
 
 module.exports = router;
