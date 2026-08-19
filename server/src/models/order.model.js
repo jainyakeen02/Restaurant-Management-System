@@ -20,10 +20,17 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema(
   {
+    // Bill number: BRANCHCODE-YYYYMMDD-NNN (e.g. SGROAD001-20260818-001)
+    billNumber: {
+      type: String,
+      unique: true,
+      sparse: true, // allows null while being unique
+      index: true,
+    },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
-      required: true,
+      required: false, // Optional — branches operate independently
     },
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,6 +41,9 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
     },
+    // Walk-in customer details (for billing desk orders)
+    customerName: { type: String, trim: true },
+    customerPhone: { type: String, trim: true },
     table: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Table",
@@ -46,6 +56,8 @@ const orderSchema = new mongoose.Schema(
     items: [orderItemSchema],
     subtotal: { type: Number, required: true, default: 0 },
     discount: { type: Number, default: 0 },
+    taxRate: { type: Number, default: 5 }, // percentage
+    taxAmount: { type: Number, default: 0 },
     total: { type: Number, required: true, default: 0 },
     orderStatus: {
       type: String,
@@ -65,6 +77,12 @@ const orderSchema = new mongoose.Schema(
       enum: ["UNPAID", "PARTIAL", "PAID", "REFUNDED"],
       default: "UNPAID",
     },
+    paymentMethod: {
+      type: String,
+      enum: ["CASH", "CARD", "UPI", "ONLINE"],
+    },
+    whatsappSent: { type: Boolean, default: false },
+    notes: { type: String },
   },
   {
     timestamps: true,
@@ -73,3 +91,4 @@ const orderSchema = new mongoose.Schema(
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;
+

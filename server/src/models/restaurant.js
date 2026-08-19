@@ -4,7 +4,7 @@ const restaurantSchema = new mongoose.Schema({
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Organization",
-        required: true,
+        required: false, // Super Admin can create branches independent of org
     },
     name: {
         type: String,

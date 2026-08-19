@@ -35,10 +35,15 @@ const authRoutes = require("./routes/auth.routes");
 const organizationRoutes = require("./routes/organization.routes");
 const customerRoutes = require("./routes/customer.routes");
 
+const adminRoutes = require("./routes/admin.routes");
+const menuRoutes = require("./routes/menu.routes");
+
 app.use("/api/auth", authRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/customers", customerRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/menu", menuRoutes);
 
 // 404 Not Found Handler
 app.use(notFoundHandler);

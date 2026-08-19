@@ -36,7 +36,14 @@ const getRestaurantById = async (req, res, next) => {
 
 const createRestaurant = async (req, res, next) => {
     try {
-        const restaurant = await Restaurant.create(req.body);
+        const body = { ...req.body };
+        
+        // Strip empty organization string to avoid ObjectId cast error
+        if (!body.organization || body.organization === '') {
+            delete body.organization;
+        }
+
+        const restaurant = await Restaurant.create(body);
 
         res.status(201).json({
             success: true,

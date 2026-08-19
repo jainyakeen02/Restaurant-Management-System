@@ -11,7 +11,7 @@ const menuCategorySchema = new mongoose.Schema(
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
-      required: true,
+      required: false,
     },
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,
@@ -51,7 +51,7 @@ const menuItemSchema = new mongoose.Schema(
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
-      required: true,
+      required: false,
     },
     restaurant: {
       type: mongoose.Schema.Types.ObjectId,

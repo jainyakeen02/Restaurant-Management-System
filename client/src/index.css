@@ -1,13 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #e11d48;
+  --color-primary-dark: #d97706;
+  --color-background: #ffffff;
+  --color-background-dark: #111827;
+  --color-surface: #f8f9fa;
+  --color-surface-dark: #1f2937;
+  --color-text: #1f2937;
+  --color-text-dark: #f3f4f6;
+}
 
 @layer base {
   body {
     @apply bg-background text-text transition-colors duration-200 antialiased;
   }
   
-  /* Apply dark mode via HTML class */
   .dark body {
     @apply bg-background-dark text-text-dark;
   }
@@ -35,6 +43,6 @@
   }
 
   .dark .input-field {
-    @apply bg-gray-800 border-gray-600 focus:ring-primary-dark text-white;
+    @apply bg-gray-800 border-gray-600 text-white;
   }
 }
