@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
       // Session expired or unauthorized
       localStorage.removeItem('dineops_token');
       localStorage.removeItem('dineops_user');
-      window.location.href = '/admin/login'; // Simple hard redirect for now
+      window.location.href = '/auth?mode=login';
     }
     return Promise.reject(error);
   }

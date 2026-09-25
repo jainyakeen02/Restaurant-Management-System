@@ -18,6 +18,60 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  const customerLogin = async (identifier, password) => {
+    try {
+      const response = await apiClient.post('/auth/customer/login', { identifier, password });
+      const { token, user: userData } = response.data;
+
+      localStorage.setItem('dineops_token', token);
+      localStorage.setItem('dineops_user', JSON.stringify(userData));
+
+      setUser(userData);
+      return { success: true, user: userData };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Customer login failed. Please check your credentials.',
+      };
+    }
+  };
+
+  const customerRegister = async ({ name, email, phone, password }) => {
+    try {
+      const response = await apiClient.post('/auth/customer/register', { name, email, phone, password });
+      const { token, user: userData } = response.data;
+
+      localStorage.setItem('dineops_token', token);
+      localStorage.setItem('dineops_user', JSON.stringify(userData));
+
+      setUser(userData);
+      return { success: true, user: userData };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Customer registration failed.',
+      };
+    }
+  };
+
+  const adminLogin = async (email, password) => {
+    try {
+      const response = await apiClient.post('/auth/admin/login', { email, password });
+      const { token, user: userData } = response.data;
+
+      localStorage.setItem('dineops_token', token);
+      localStorage.setItem('dineops_user', JSON.stringify(userData));
+
+      setUser(userData);
+      return { success: true, user: userData };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Admin login failed. Please check your email and password.',
+      };
+    }
+  };
+
   const login = async (email, password) => {
     try {
       const response = await apiClient.post('/auth/login', { email, password });
@@ -27,7 +81,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('dineops_user', JSON.stringify(userData));
       
       setUser(userData);
-      return { success: true };
+      return { success: true, user: userData };
     } catch (error) {
       return { 
         success: false, 
@@ -51,7 +105,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('dineops_user', JSON.stringify(userData));
 
       setUser(userData);
-      return { success: true };
+      return { success: true, user: userData };
     } catch (error) {
       return {
         success: false,
@@ -67,7 +121,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, ownerLogin, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, customerLogin, customerRegister, adminLogin, ownerLogin, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

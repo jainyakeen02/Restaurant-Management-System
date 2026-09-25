@@ -190,7 +190,17 @@ const getBranchOrders = async (req, res, next) => {
 const updateOrderStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
-    const VALID = ["CONFIRMED", "PREPARING", "READY", "SERVED", "COMPLETED", "CANCELLED"];
+    const VALID = [
+      "PENDING",
+      "CONFIRMED",
+      "PREPARING",
+      "READY",
+      "OUT_FOR_DELIVERY",
+      "DELIVERED",
+      "SERVED",
+      "COMPLETED",
+      "CANCELLED",
+    ];
 
     if (!VALID.includes(status)) {
       return res.status(400).json({ success: false, message: "Invalid status." });
@@ -299,6 +309,46 @@ const getKitchenOrders = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc  Get orders recently marked READY — desk notification feed
+ * @route GET /api/billing/notifications
+ * @access FRANCHISE_OWNER
+ */
+const getDeskNotifications = async (req, res, next) => {
+  try {
+    const restaurantId = req.user.restaurant;
+
+    // Fetch orders that are READY (cooked, waiting to be served)
+    const readyOrders = await Order.find({
+      restaurant: restaurantId,
+      orderStatus: "READY",
+    })
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    // Also fetch recently SERVED orders (last 1 hour) so desk can track them
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentlyServed = await Order.find({
+      restaurant: restaurantId,
+      orderStatus: "SERVED",
+      updatedAt: { $gte: oneHourAgo },
+    })
+      .sort({ updatedAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      unreadCount: readyOrders.length,
+      data: {
+        ready: readyOrders,
+        recentlyServed,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getMenuForBranch,
   createWalkInOrder,
@@ -306,4 +356,5 @@ module.exports = {
   updateOrderStatus,
   markOrderPaid,
   getKitchenOrders,
+  getDeskNotifications,
 };

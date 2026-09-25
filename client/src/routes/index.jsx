@@ -5,8 +5,11 @@ import { useAuth } from '../context/AuthContext';
 import LandingPage from '../pages/LandingPage';
 import AuthForms from '../pages/auth/AuthForms';
 import OwnerLogin from '../pages/auth/OwnerLogin';
+import ForgotPassword from '../pages/auth/ForgotPassword';
+import ResetPassword from '../pages/auth/ResetPassword';
 import BranchSelector from '../pages/customer/BranchSelector';
 import CustomerMenu from '../pages/customer/CustomerMenu';
+import OrderTracking from '../pages/customer/OrderTracking';
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -19,6 +22,7 @@ import AdminSettings from '../pages/admin/AdminSettings';
 
 import AdminBilling from '../pages/admin/AdminBilling';
 import AdminEmployees from '../pages/admin/AdminEmployees';
+import KitchenDisplay from '../pages/admin/KitchenDisplay';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -50,14 +54,23 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
+        {/* Default Landing Page: Full Menu Explore */}
+        <Route path="/" element={<CustomerMenu />} />
+        <Route path="/menu" element={<CustomerMenu />} />
+        <Route path="/order" element={<CustomerMenu />} />
+        <Route path="/order/:branchId" element={<CustomerMenu />} />
+
+        {/* Branch Selector */}
+        <Route path="/branches" element={<BranchSelector />} />
+
+        {/* Auth & Other Public Routes */}
         <Route path="/auth" element={<AuthForms />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/owner-login" element={<OwnerLogin />} />
-        
-        {/* Customer Protected Routes */}
-        <Route path="/branches" element={<ProtectedRoute><BranchSelector /></ProtectedRoute>} />
-        <Route path="/order/:branchId" element={<ProtectedRoute><CustomerMenu /></ProtectedRoute>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/track-order/:orderId" element={<OrderTracking />} />
+        <Route path="/orders/:orderId" element={<OrderTracking />} />
         
         {/* Protected Admin Routes */}
         <Route 
@@ -71,6 +84,7 @@ const AppRoutes = () => {
                 <Route path="menu" element={<AdminMenuManagement />} />
                 <Route path="billing" element={<AdminBilling />} />
                 <Route path="employees" element={<AdminEmployees />} />
+                <Route path="kitchen" element={<KitchenDisplay />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="settings" element={<AdminSettings />} />
                 <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />

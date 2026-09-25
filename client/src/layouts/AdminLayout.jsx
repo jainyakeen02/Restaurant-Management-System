@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, UtensilsCrossed, Settings, Menu as MenuIcon, Bell, X, LogOut, Store } from 'lucide-react';
+import { LayoutDashboard, Users, UtensilsCrossed, Settings, Menu as MenuIcon, Bell, X, LogOut, Store, ChefHat } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,7 +23,8 @@ const AdminLayout = ({ children }) => {
       // Branch Owner (FRANCHISE_OWNER)
       return [
         { label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
-        { label: 'Billing', icon: UtensilsCrossed, path: '/admin/billing' },
+        { label: 'Billing / Desk', icon: UtensilsCrossed, path: '/admin/billing' },
+        { label: 'Kitchen Display', icon: ChefHat, path: '/admin/kitchen' },
         { label: 'Employees', icon: Users, path: '/admin/employees' },
         { label: 'Settings', icon: Settings, path: '/admin/settings' },
       ];

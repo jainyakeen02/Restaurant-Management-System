@@ -10,12 +10,13 @@ const { protect, authorize } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-router.use(protect);
-
+// Public routes for visitors / guests to view branches
 router.get("/", getRestaurants);
-router.post("/", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createRestaurant);
 router.get("/:id", getRestaurantById);
-router.put("/:id", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER", "RESTAURANT_ADMIN"), updateRestaurant);
-router.patch("/:id/deactivate", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), deactivateRestaurant);
+
+// Protected admin routes
+router.post("/", protect, authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createRestaurant);
+router.put("/:id", protect, authorize("SUPER_ADMIN", "ORGANIZATION_OWNER", "RESTAURANT_ADMIN"), updateRestaurant);
+router.patch("/:id/deactivate", protect, authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), deactivateRestaurant);
 
 module.exports = router;

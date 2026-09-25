@@ -26,6 +26,9 @@ const menuCategorySchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    image: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -38,6 +41,9 @@ const menuItemSchema = new mongoose.Schema(
       trim: true,
     },
     description: String,
+    image: {
+      type: String,
+    },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "MenuCategory",

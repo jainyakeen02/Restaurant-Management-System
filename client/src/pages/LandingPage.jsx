@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { UtensilsCrossed, ChevronRight, Store, Smartphone, TrendingUp } from 'lucide-react';
@@ -8,13 +8,15 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   // If user is already logged in, redirect them based on their role
-  if (user) {
-    if (['SUPER_ADMIN', 'ORGANIZATION_OWNER'].includes(user.role)) {
-      navigate('/admin/dashboard');
-    } else {
-      navigate('/branches');
+  useEffect(() => {
+    if (user) {
+      if (['SUPER_ADMIN', 'ORGANIZATION_OWNER', 'FRANCHISE_OWNER'].includes(user.role)) {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/branches');
+      }
     }
-  }
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col">
@@ -24,12 +26,15 @@ const LandingPage = () => {
           <UtensilsCrossed className="w-8 h-8 text-primary dark:text-primary-dark" />
           <span className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">DineOps</span>
         </div>
-        <div className="flex items-center space-x-4">
-          <Link to="/auth?mode=login" className="text-gray-600 dark:text-gray-300 font-medium hover:text-primary transition-colors">
-            Login
+        <div className="flex items-center space-x-3">
+          <Link to="/auth?tab=branch" className="hidden sm:inline-block text-gray-600 dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors">
+            Branch Portal
           </Link>
-          <Link to="/auth?mode=signup" className="btn-primary flex items-center shadow-md shadow-primary/20">
-            Get Started
+          <Link to="/auth?tab=customer&mode=login" className="text-gray-600 dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors">
+            Sign In
+          </Link>
+          <Link to="/auth?tab=customer&mode=signup" className="btn-primary flex items-center shadow-md shadow-primary/20 text-sm py-2 px-4">
+            Order Food
           </Link>
         </div>
       </header>
@@ -49,11 +54,11 @@ const LandingPage = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 relative z-10">
-          <Link to="/auth?mode=signup" className="btn-primary px-8 py-4 text-lg rounded-xl shadow-xl shadow-primary/30 flex items-center justify-center hover:-translate-y-1 transition-all">
-            Start Free Trial <ChevronRight className="ml-2 w-5 h-5" />
+          <Link to="/auth?tab=customer&mode=login" className="btn-primary px-8 py-4 text-lg rounded-xl shadow-xl shadow-primary/30 flex items-center justify-center hover:-translate-y-1 transition-all">
+            Order as Customer <ChevronRight className="ml-2 w-5 h-5" />
           </Link>
-          <Link to="/auth?mode=login" className="px-8 py-4 text-lg rounded-xl font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all flex items-center justify-center hover:-translate-y-1">
-            Order as Customer
+          <Link to="/auth?tab=branch" className="px-8 py-4 text-lg rounded-xl font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all flex items-center justify-center hover:-translate-y-1">
+            Branch Owner Login
           </Link>
         </div>
 

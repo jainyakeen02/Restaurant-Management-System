@@ -66,6 +66,8 @@ const orderSchema = new mongoose.Schema(
         "CONFIRMED",
         "PREPARING",
         "READY",
+        "OUT_FOR_DELIVERY",
+        "DELIVERED",
         "SERVED",
         "COMPLETED",
         "CANCELLED",
@@ -80,6 +82,19 @@ const orderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       enum: ["CASH", "CARD", "UPI", "ONLINE"],
+    },
+    deliveryAddress: {
+      street: { type: String, trim: true },
+      city: { type: String, trim: true },
+      state: { type: String, trim: true },
+      pincode: { type: String, trim: true },
+      landmark: { type: String, trim: true },
+    },
+    deliveryNotes: { type: String, trim: true },
+    estimatedDeliveryTime: { type: Date },
+    deliveryDriver: {
+      name: { type: String, trim: true },
+      phone: { type: String, trim: true },
     },
     whatsappSent: { type: Boolean, default: false },
     notes: { type: String },

@@ -7,17 +7,16 @@ const { protect, authorize } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-router.use(protect);
-
-// Categories
+// Public routes for visitors / guests to explore menu
 router.get("/categories", getCategories);
-router.post("/categories", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createCategory);
-router.delete("/categories/:id", authorize("SUPER_ADMIN"), deleteCategory);
-
-// Items
 router.get("/items", getMenuItems);
-router.post("/items", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createMenuItem);
-router.put("/items/:id", authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), updateMenuItem);
-router.delete("/items/:id", authorize("SUPER_ADMIN"), deleteMenuItem);
+
+// Protected admin routes
+router.post("/categories", protect, authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createCategory);
+router.delete("/categories/:id", protect, authorize("SUPER_ADMIN"), deleteCategory);
+
+router.post("/items", protect, authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), createMenuItem);
+router.put("/items/:id", protect, authorize("SUPER_ADMIN", "ORGANIZATION_OWNER"), updateMenuItem);
+router.delete("/items/:id", protect, authorize("SUPER_ADMIN"), deleteMenuItem);
 
 module.exports = router;

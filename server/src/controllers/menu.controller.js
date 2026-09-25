@@ -14,8 +14,8 @@ const getCategories = async (req, res, next) => {
 
 const createCategory = async (req, res, next) => {
   try {
-    const { name, description, organization, restaurant, sortOrder } = req.body;
-    const data = { name, description, restaurant, sortOrder };
+    const { name, description, image, organization, restaurant, sortOrder } = req.body;
+    const data = { name, description, image, restaurant, sortOrder };
     if (organization && organization !== '') data.organization = organization;
     const category = await MenuCategory.create(data);
     res.status(201).json({ success: true, message: "Category created", data: category });
@@ -35,7 +35,13 @@ const deleteCategory = async (req, res, next) => {
 const getMenuItems = async (req, res, next) => {
   try {
     const filter = { status: "active" };
-    if (req.query.restaurant) filter.restaurant = req.query.restaurant;
+    if (req.query.restaurant) {
+      filter.$or = [
+        { restaurant: req.query.restaurant },
+        { restaurant: null },
+        { restaurant: { $exists: false } }
+      ];
+    }
     if (req.query.category) filter.category = req.query.category;
 
     const items = await MenuItem.find(filter)
@@ -48,8 +54,8 @@ const getMenuItems = async (req, res, next) => {
 
 const createMenuItem = async (req, res, next) => {
   try {
-    const { name, description, category, price, organization, restaurant, variants, modifiers } = req.body;
-    const data = { name, description, category, price, variants, modifiers };
+    const { name, description, image, category, price, organization, restaurant, variants, modifiers } = req.body;
+    const data = { name, description, image, category, price, variants, modifiers };
     if (organization && organization !== '') data.organization = organization;
     if (restaurant && restaurant !== '') data.restaurant = restaurant;
     const item = await MenuItem.create(data);

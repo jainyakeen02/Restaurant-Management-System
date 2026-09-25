@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const Customer = require("../models/customer.model");
 
 // Protect routes
 const protect = async (req, res, next) => {
@@ -25,7 +26,25 @@ const protect = async (req, res, next) => {
       process.env.JWT_SECRET || "dineops_super_secret_key_2026"
     );
 
-    req.user = await User.findById(decoded.id);
+    if (decoded.role === "CUSTOMER" || decoded.isCustomer) {
+      req.user = await Customer.findById(decoded.id);
+      if (req.user) {
+        req.user.role = "CUSTOMER";
+      } else {
+        // Fallback check in User collection for legacy accounts
+        req.user = await User.findById(decoded.id);
+      }
+    } else {
+      req.user = await User.findById(decoded.id);
+    }
+
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "User no longer exists",
+      });
+    }
+
     next();
   } catch (error) {
     return res.status(401).json({

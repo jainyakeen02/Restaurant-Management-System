@@ -4,6 +4,19 @@ import apiClient from '../../api/apiClient';
 import { MapPin, Search, ChevronRight, Store, Loader2 } from 'lucide-react';
 import CustomerLayout from '../../layouts/CustomerLayout';
 
+const formatAddress = (address) => {
+  if (!address) return 'Address not provided';
+  if (typeof address === 'string') return address;
+  const parts = [
+    address.street,
+    address.city,
+    address.state,
+    address.country,
+    address.postalcode,
+  ].filter(Boolean);
+  return parts.length > 0 ? parts.join(', ') : 'Address not provided';
+};
+
 const BranchSelector = () => {
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,10 +42,15 @@ const BranchSelector = () => {
     fetchBranches();
   }, []);
 
-  const filteredBranches = branches.filter(branch => 
-    branch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (branch.address && branch.address.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredBranches = branches.filter((branch) => {
+    const name = branch.name || '';
+    const addressStr = formatAddress(branch.address);
+    const query = searchQuery.toLowerCase();
+    return (
+      name.toLowerCase().includes(query) ||
+      addressStr.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <CustomerLayout>
@@ -91,7 +109,7 @@ const BranchSelector = () => {
                     alt={branch.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  {!branch.isActive && (
+                  {(branch.status === 'inactive' || branch.isActive === false) && (
                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
                       <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">Temporarily Closed</span>
                     </div>
@@ -102,12 +120,12 @@ const BranchSelector = () => {
                 
                 <div className="flex items-start text-gray-500 dark:text-gray-400 mb-4">
                   <MapPin className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm leading-relaxed">{branch.address || 'Address not provided'}</span>
+                  <span className="text-sm leading-relaxed">{formatAddress(branch.address)}</span>
                 </div>
                 
                 <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    {branch.contactNumber || 'No contact info'}
+                    {branch.contact?.phone || branch.contactNumber || 'No contact info'}
                   </span>
                   <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
                     <ChevronRight className="w-5 h-5" />

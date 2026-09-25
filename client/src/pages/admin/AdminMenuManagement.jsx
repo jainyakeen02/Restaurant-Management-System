@@ -11,7 +11,7 @@ const AddItemModal = ({ onClose, onSuccess, categories, branches }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [form, setForm] = useState({
-    name: '', description: '', price: '', category: '', restaurant: ''
+    name: '', description: '', price: '', category: '', restaurant: '', image: ''
   });
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,13 +21,13 @@ const AddItemModal = ({ onClose, onSuccess, categories, branches }) => {
     setLoading(true);
     setError(null);
     try {
-      // Find the organization from the selected category
       const selectedCategory = categories.find(c => c._id === form.category);
       await apiClient.post('/menu/items', {
         name: form.name,
         description: form.description,
         price: parseFloat(form.price),
         category: form.category,
+        image: form.image || undefined,
         organization: selectedCategory?.organization,
         restaurant: form.restaurant || undefined
       });
@@ -58,6 +58,10 @@ const AddItemModal = ({ onClose, onSuccess, categories, branches }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Item Name *</label>
             <input name="name" required className="input-field" placeholder="e.g. Margherita Pizza" value={form.name} onChange={handleChange} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image URL (Unsplash or direct image link)</label>
+            <input name="image" className="input-field" placeholder="https://images.unsplash.com/photo-..." value={form.image} onChange={handleChange} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
@@ -102,7 +106,7 @@ const AddItemModal = ({ onClose, onSuccess, categories, branches }) => {
 const AddCategoryModal = ({ onClose, onSuccess, organizations }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [form, setForm] = useState({ name: '', description: '', organization: organizations[0]?._id || '' });
+  const [form, setForm] = useState({ name: '', description: '', image: '', organization: organizations[0]?._id || '' });
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -132,6 +136,10 @@ const AddCategoryModal = ({ onClose, onSuccess, organizations }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category Name *</label>
             <input name="name" required className="input-field" placeholder="e.g. Pizza, Beverages" value={form.name} onChange={handleChange} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image URL (Unsplash or direct image link)</label>
+            <input name="image" className="input-field" placeholder="https://images.unsplash.com/photo-..." value={form.image} onChange={handleChange} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
@@ -312,13 +320,24 @@ const AdminMenuManagement = () => {
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {items.map(item => (
-                          <div key={item._id} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                          <div key={item._id} className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                            {item.image ? (
+                              <img 
+                                src={item.image} 
+                                alt={item.name} 
+                                className="w-14 h-14 rounded-lg object-cover flex-shrink-0 bg-gray-100 dark:bg-gray-700" 
+                              />
+                            ) : (
+                              <div className="w-14 h-14 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-gray-400">
+                                <UtensilsCrossed className="w-6 h-6" />
+                              </div>
+                            )}
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-gray-900 dark:text-white truncate">{item.name}</p>
                               <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{item.description || '—'}</p>
                               <p className="text-primary dark:text-primary-dark font-bold mt-1">₹{item.price}</p>
                             </div>
-                            <div className="flex items-center gap-1 ml-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
                               <button className="p-1.5 text-gray-400 hover:text-primary rounded-lg hover:bg-primary/10 transition-colors">
                                 <Pencil className="w-4 h-4" />
                               </button>
