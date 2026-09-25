@@ -9,10 +9,17 @@ const { errorHandler, notFoundHandler } = require("./middleware/error.middleware
 const app = express();
 
 // security middleware
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: false }));
 
-//Enable cors
-app.use(cors());
+// Enable cors for Vercel, localhost, and custom domains
+app.use(
+  cors({
+    origin: true, // Reflects the origin of the requester (supports Vercel preview & production domains)
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 //Parse incoming JSOn request
 app.use(express.json({ limit: "10kb" }));
