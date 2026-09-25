@@ -81,9 +81,10 @@ const CustomerMenu = () => {
       // Fetch menu items and categories
       try {
         setLoadingMenu(true);
+        const queryParams = activeBranchId ? { restaurant: activeBranchId } : {};
         const [itemsRes, catRes] = await Promise.all([
-          apiClient.get('/menu/items', { params: { restaurant: activeBranchId } }),
-          apiClient.get('/menu/categories', { params: { restaurant: activeBranchId } })
+          apiClient.get('/menu/items', { params: queryParams }),
+          apiClient.get('/menu/categories', { params: queryParams })
         ]);
 
         if (catRes.data?.data && catRes.data.data.length > 0) {
@@ -310,7 +311,9 @@ const CustomerMenu = () => {
               {/* Quick Branch Highlights */}
               <div className="flex items-center gap-3 self-start md:self-center bg-gray-50 dark:bg-gray-700/50 p-3 rounded-2xl border border-gray-100 dark:border-gray-600">
                 <div className="text-center px-3 border-r border-gray-200 dark:border-gray-600">
-                  <span className="block text-lg font-black text-gray-900 dark:text-white">52</span>
+                  <span className="block text-lg font-black text-gray-900 dark:text-white">
+                    {categories.length > 1 ? categories.length - 1 : categories.length}
+                  </span>
                   <span className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Categories</span>
                 </div>
                 <div className="text-center px-3">

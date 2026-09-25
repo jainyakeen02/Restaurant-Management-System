@@ -54,18 +54,18 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default Landing Page: Full Menu Explore */}
-        <Route path="/" element={<CustomerMenu />} />
-        <Route path="/menu" element={<CustomerMenu />} />
+        {/* Default Landing Page */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/landing" element={<LandingPage />} />
+
+        {/* Customer Menu & Ordering */}
         <Route path="/order" element={<CustomerMenu />} />
         <Route path="/order/:branchId" element={<CustomerMenu />} />
-
-        {/* Branch Selector */}
+        <Route path="/menu" element={<CustomerMenu />} />
         <Route path="/branches" element={<BranchSelector />} />
 
         {/* Auth & Other Public Routes */}
         <Route path="/auth" element={<AuthForms />} />
-        <Route path="/landing" element={<LandingPage />} />
         <Route path="/owner-login" element={<OwnerLogin />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />

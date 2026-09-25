@@ -5,7 +5,21 @@ const Restaurant = require("../models/restaurant");
 
 const getCategories = async (req, res, next) => {
   try {
-    const categories = await MenuCategory.find({ status: "active" })
+    const filter = { status: "active" };
+    if (
+      req.query.restaurant &&
+      req.query.restaurant !== "undefined" &&
+      req.query.restaurant !== "null" &&
+      req.query.restaurant.match(/^[0-9a-fA-F]{24}$/)
+    ) {
+      filter.$or = [
+        { restaurant: req.query.restaurant },
+        { restaurant: null },
+        { restaurant: { $exists: false } },
+      ];
+    }
+
+    const categories = await MenuCategory.find(filter)
       .populate("restaurant", "name")
       .sort("sortOrder");
     res.status(200).json({ success: true, count: categories.length, data: categories });
@@ -35,14 +49,21 @@ const deleteCategory = async (req, res, next) => {
 const getMenuItems = async (req, res, next) => {
   try {
     const filter = { status: "active" };
-    if (req.query.restaurant) {
+    if (
+      req.query.restaurant &&
+      req.query.restaurant !== "undefined" &&
+      req.query.restaurant !== "null" &&
+      req.query.restaurant.match(/^[0-9a-fA-F]{24}$/)
+    ) {
       filter.$or = [
         { restaurant: req.query.restaurant },
         { restaurant: null },
         { restaurant: { $exists: false } }
       ];
     }
-    if (req.query.category) filter.category = req.query.category;
+    if (req.query.category && req.query.category.match(/^[0-9a-fA-F]{24}$/)) {
+      filter.category = req.query.category;
+    }
 
     const items = await MenuItem.find(filter)
       .populate("category", "name")

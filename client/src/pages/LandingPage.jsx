@@ -33,7 +33,7 @@ const LandingPage = () => {
           <Link to="/auth?tab=customer&mode=login" className="text-gray-600 dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors">
             Sign In
           </Link>
-          <Link to="/auth?tab=customer&mode=signup" className="btn-primary flex items-center shadow-md shadow-primary/20 text-sm py-2 px-4">
+          <Link to="/order" className="btn-primary flex items-center shadow-md shadow-primary/20 text-sm py-2 px-4">
             Order Food
           </Link>
         </div>
@@ -54,7 +54,7 @@ const LandingPage = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 relative z-10">
-          <Link to="/auth?tab=customer&mode=login" className="btn-primary px-8 py-4 text-lg rounded-xl shadow-xl shadow-primary/30 flex items-center justify-center hover:-translate-y-1 transition-all">
+          <Link to="/order" className="btn-primary px-8 py-4 text-lg rounded-xl shadow-xl shadow-primary/30 flex items-center justify-center hover:-translate-y-1 transition-all">
             Order as Customer <ChevronRight className="ml-2 w-5 h-5" />
           </Link>
           <Link to="/auth?tab=branch" className="px-8 py-4 text-lg rounded-xl font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all flex items-center justify-center hover:-translate-y-1">
